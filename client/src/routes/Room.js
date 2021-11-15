@@ -79,7 +79,7 @@ const Room = (props) => {
         peerRef.current = createPeer();
         const desc = new RTCSessionDescription(incoming.sdp);
         peerRef.current.setRemoteDescription(desc).then(() => {
-            userStream.current.getTracks().forEach(track => peerRef.current.addTrack(track, userStream.current));
+            userStream.current.getTracks().forEach(track => senders.current.push(peerRef.current.addTrack(track, userStream.current)));
         }).then(() => {
             return peerRef.current.createAnswer();
         }).then(answer => {
@@ -132,10 +132,15 @@ const Room = (props) => {
 
     return (
         <div>
-            <video controls style={{height: 500, width: 500}} autoPlay ref={userVideo} />
-            <video controls style={{height: 500, width: 500}} autoPlay ref={partnerVideo} />
+
+            <div id="video-chat-container" className="video-position" >
+            <video  id="local-video" autoPlay ref={userVideo} />
+            <div className="video-display">
+            <video  id="remote-video" autoPlay ref={partnerVideo} />
+            </div>
             <button onClick={shareScreen}>Share screen</button>
         </div>
+         </div>
     );
 };
 
